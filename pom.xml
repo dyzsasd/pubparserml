@@ -5,6 +5,14 @@
     <groupId>com.multiposting.pubparser</groupId>
     <artifactId>machine-learning-text-parser</artifactId>
     <version>1.0-SNAPSHOT</version>
+
+
+    <properties>
+        <jars>target/machine-learning-text-parser-1.0-SNAPSHOT.jar</jars>
+        <mainClass>"SimpleApp"</mainClass>
+        <spark.master>spark://10.235.249.33:7077</spark.master>
+    </properties>
+
     <!-- Maven profiles allow you to support both Scala 2.10 and Scala 2.11 with
       the right dependencies for modules specified for each version separately -->
     <profiles>
@@ -66,12 +74,6 @@
             </dependencies>
         </profile>
     </profiles>
-
-    <properties>
-        <jars>target/machine-learning-text-parser-1.0-SNAPSHOT.jar</jars>
-        <mainClass>"SimpleApp"</mainClass>
-        <spark.master>local</spark.master>
-    </properties>
 
     <build>
         <sourceDirectory>src/main/scala</sourceDirectory>

@@ -7,8 +7,7 @@ object SimpleApp {
 
     System.setProperty("spark.executor.instances", "3")
     val conf = new SparkConf().setAppName("Spark-Test")
-                              .setMaster("local")
-                              .setSparkHome(System.getenv("SPARK_HOME"))
+                              //.setSparkHome(System.getenv("SPARK_HOME"))
 
     conf.getAll.foreach(println)
     val sc = new SparkContext("local","test")
