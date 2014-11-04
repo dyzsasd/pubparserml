@@ -9,8 +9,8 @@
 
     <properties>
         <jars>target/machine-learning-text-parser-1.0-SNAPSHOT.jar</jars>
-        <mainClass>"SimpleApp"</mainClass>
-        <spark.master>spark://10.235.249.33:7077</spark.master>
+        <mainClass>"SparkPi"</mainClass>
+        <spark.master>spark://cluster3:7077</spark.master>
     </properties>
 
     <!-- Maven profiles allow you to support both Scala 2.10 and Scala 2.11 with
