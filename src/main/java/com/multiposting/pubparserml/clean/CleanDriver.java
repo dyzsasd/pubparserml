@@ -11,6 +11,7 @@ import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 import org.apache.hadoop.util.Tool;
+import org.apache.hadoop.util.ToolRunner;
 
 class CleanDriver extends Configured implements Tool{
 
@@ -40,7 +41,8 @@ class CleanDriver extends Configured implements Tool{
         return job.waitForCompletion(true)?0:1;
     }
 
-    static public void main(String[] args){
-
+    static public void main(String[] args) throws Exception {
+        int res = ToolRunner.run(new Configuration(), new CleanDriver(), args);
+        System.exit(res);
     }
 }
