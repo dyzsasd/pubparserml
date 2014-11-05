@@ -17,6 +17,7 @@ class CleanDriver extends Configured implements Tool{
     @Override
     public int run(String[] args) throws Exception {
         Configuration conf = super.getConf();
+        conf.set("textinputformat.record.delimiter","@endline\n");
 
         Job job = Job.getInstance(conf);
         job.setJobName("pubparser-cleaning");

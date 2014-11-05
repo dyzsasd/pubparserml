@@ -22,8 +22,9 @@ object InverseOrder {
     val endedData = indexedData.map(x=>{
       val text = x._1
       var restext:String = text
-      if (text.split("\t").length==3){
-        restext = text+"endline"
+      val items = text.split("\t")
+      if (items.length==3){
+        restext = items(2)+items(1)+items(0)+"@endline"
       }
 
       (x._2, restext)
@@ -31,6 +32,6 @@ object InverseOrder {
 
     val inversData = endedData.sortByKey(ascending = false,numPartitions = 20)
 
-    inversData.map(x=>(x._1+"\t"+x._2)).saveAsTextFile("hdfs:///user/szhang/pubparser/resources/indexed")
+    inversData.map(x=>(x._2)).saveAsTextFile("hdfs:///user/szhang/pubparser/resources/indexed")
   }
 }

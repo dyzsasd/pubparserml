@@ -20,6 +20,9 @@
         <mainClass>"SimpleApp"</mainClass>
         <spark.master>spark://10.235.249.33:7077</spark.master>
 
+        <scalaVersion>2.11.0</scalaVersion>
+        <!-- change to "2.11" once Scala 2.11.0 final is out -->
+        <scalaBinaryVersion>2.11</scalaBinaryVersion>
         <java.version>1.7</java.version>
         <hadoop.version>2.5.0-cdh5.2.0</hadoop.version>
         <hive.version>0.13.1-cdh5.2.0</hive.version>
@@ -138,67 +141,32 @@
             <classifier>hadoop2</classifier>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.scala-lang</groupId>
+            <artifactId>scala-library</artifactId>
+            <version>${scalaVersion}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.scala-lang.modules</groupId>
+            <artifactId>scala-xml_${scalaBinaryVersion}</artifactId>
+            <version>1.0.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.scala-lang.modules</groupId>
+            <artifactId>scala-parser-combinators_${scalaBinaryVersion}</artifactId>
+            <version>1.0.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.scala-lang.modules</groupId>
+            <artifactId>scala-swing_${scalaBinaryVersion}</artifactId>
+            <version>1.0.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.spark</groupId>
+            <artifactId>spark-core_2.10</artifactId>
+            <version>1.1.0</version>
+        </dependency>
     </dependencies>
-
-    <profiles>
-        <profile>
-            <id>scala-2.11</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <properties>
-                <scalaVersion>2.11.0</scalaVersion>
-                <!-- change to "2.11" once Scala 2.11.0 final is out -->
-                <scalaBinaryVersion>2.11</scalaBinaryVersion>
-            </properties>
-            <dependencies>
-                <dependency>
-                    <groupId>org.scala-lang</groupId>
-                    <artifactId>scala-library</artifactId>
-                    <version>${scalaVersion}</version>
-                </dependency>
-                <dependency>
-                    <groupId>org.scala-lang.modules</groupId>
-                    <artifactId>scala-xml_${scalaBinaryVersion}</artifactId>
-                    <version>1.0.1</version>
-                </dependency>
-                <dependency>
-                    <groupId>org.scala-lang.modules</groupId>
-                    <artifactId>scala-parser-combinators_${scalaBinaryVersion}</artifactId>
-                    <version>1.0.1</version>
-                </dependency>
-                <dependency>
-                    <groupId>org.scala-lang.modules</groupId>
-                    <artifactId>scala-swing_${scalaBinaryVersion}</artifactId>
-                    <version>1.0.1</version>
-                </dependency>
-                <dependency>
-                    <groupId>org.apache.spark</groupId>
-                    <artifactId>spark-core_2.10</artifactId>
-                    <version>1.1.0</version>
-                </dependency>
-            </dependencies>
-        </profile>
-        <profile>
-            <id>scala-2.10</id>
-            <properties>
-                <scalaVersion>2.10.3</scalaVersion>
-                <scalaBinaryVersion>2.10</scalaBinaryVersion>
-            </properties>
-            <dependencies>
-                <dependency>
-                    <groupId>org.scala-lang</groupId>
-                    <artifactId>scala-library</artifactId>
-                    <version>${scalaVersion}</version>
-                </dependency>
-                <dependency>
-                    <groupId>org.scala-lang</groupId>
-                    <artifactId>scala-swing</artifactId>
-                    <version>${scalaVersion}</version>
-                </dependency>
-            </dependencies>
-        </profile>
-    </profiles>
 
     <build>
         <sourceDirectory>src/main/scala</sourceDirectory>

@@ -15,5 +15,7 @@ public class CleanMapper extends Mapper<LongWritable, Text, Text, NullWritable> 
     @Override
     protected void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
         String data = value.toString();
+        data.replace("\n"," ");
+
     }
 }
