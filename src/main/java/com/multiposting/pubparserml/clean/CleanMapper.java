@@ -15,11 +15,14 @@ public class CleanMapper extends Mapper<LongWritable, Text, Text, NullWritable> 
     @Override
     protected void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
         String data = value.toString();
-        data = data.replaceAll("\t","@tab");
-        data = data.replaceAll("\\\\n"," ");
-        data = data.replace("[^\\p{L}]+"," ");
-        data = data.replaceAll("@tab","\t");
-        context.write(new Text(data),NullWritable.get());
+        String res = data.replaceAll("\t","thisistab")
+                .replaceAll("\\\\n"," ")
+                .replaceAll("\\\\t"," ")
+                .replaceAll("[^\\p{L}]+"," ")
+                .replaceAll("thisistab","\t").toLowerCase();
+        String[] items = res.split("\t");
+        if(items[items.length-1].contains("descrip") || items[items.length-1].contains("profil"))
+            context.write(new Text(res),NullWritable.get());
 
     }
 }
