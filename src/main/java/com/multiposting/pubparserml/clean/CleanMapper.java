@@ -21,8 +21,12 @@ public class CleanMapper extends Mapper<LongWritable, Text, Text, NullWritable> 
                 .replaceAll("[^\\p{L}]+"," ")
                 .replaceAll("thisistab","\t").toLowerCase();
         String[] items = res.split("\t");
-        if(items[items.length-1].contains("descrip") || items[items.length-1].contains("profil"))
+        if(!(items[0].equals(" ")||items[0].equals("")||items[0]==null)
+                &&(items[items.length-1].equals("societe descriptif")
+                    || items[items.length-1].equals("description")
+                    || items[items.length-1].equals("profil recherche"))){
             context.write(new Text(res),NullWritable.get());
+        }
 
     }
 }

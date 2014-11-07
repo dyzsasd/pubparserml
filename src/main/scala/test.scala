@@ -23,8 +23,8 @@ object InverseOrder {
       val text = x._1
       var restext:String = text
       val items = text.split("\t")
-      if (items.length==3){
-        restext = items(2)+"\t"+items(1)+"\t"+items(0)+"@endline"
+      if (items.length>1){
+        restext = items(items.length-1)+"\t"+items(0)+"@endline"
       }
 
       (x._2, restext)

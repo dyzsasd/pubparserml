@@ -1,11 +1,15 @@
 import java.io.{FileWriter, BufferedWriter}
 import java.nio.charset.Charset
 import org.apache.spark.rdd.RDD
+import org.apache.spark.storage.StorageLevel
 import org.apache.spark.{HashPartitioner, SparkContext, SparkConf}
 import org.apache.spark.SparkContext._
 import scala.collection.mutable.ArrayBuffer
 import scala.math.random
 import org.apache.spark._
+import org.apache.spark.mllib.recommendation.ALS
+import org.apache.spark.mllib.recommendation.Rating
+
 
 
 object processing {
@@ -21,20 +25,22 @@ object processing {
     }
 
     //loading and parsing data
-    val rawData = sc.wholeTextFiles(path)
+    val rawData = sc.wholeTextFiles(path,minPartitions=8)
     val lines = rawData.flatMap(x=>x._2.split("\n"))
     val labeledLines = lines.map(x=>{
       val items = x.split("\t")
-      (items(2), items(0))
+      (items(1), items(0))
     })
     val labeledWordVectors = preprocess(labeledLines)
-    labeledWordVectors.persist()
+    System.out.println("labeledWordVectors' partition number is "+labeledWordVectors.partitions.length.toString)
+    //labeledWordVectors.persist(StorageLevel.MEMORY_ONLY_SER)
 
     //create word2int dictionary
     val wordPairSet = labeledWordVectors.flatMap(x=>x._2.distinct.map((_,1)))
     val wordCount = wordPairSet.reduceByKey((a,b)=>a+b)
-    val filteredWordcount = wordCount.filter(x=>x._2>133 && x._2<1000000)
+    val filteredWordcount = wordCount.filter(x=>x._2>1000 && x._2<1000000)
     val wordSet = filteredWordcount.collect.toSeq.sortBy(_._2)
+
     val wordDict = wordSet.map(_._1).zipWithIndex.toMap
 
     //convert word vector to digital vector
@@ -49,8 +55,9 @@ object processing {
 
       (x._1,indexNbTuple)
     })
-    val indexedLabeledVectors = labeledVecotrs.zipWithIndex()
-    indexedLabeledVectors.cache()
+    val sample = labeledVecotrs.sample(false,0.2)
+    val indexedLabeledVectors = sample.zipWithIndex()
+    //indexedLabeledVectors.persist(StorageLevel.MEMORY_ONLY_SER)
 
     val coordinatorMatrix = indexedLabeledVectors.flatMap(x=>{
       val rowId = x._2
@@ -59,8 +66,19 @@ object processing {
     })
     val labels = indexedLabeledVectors.map(x=>(x._2, x._1._1))
 
+    val ratings = coordinatorMatrix.map(x=>Rating(x._1._1.toInt,x._1._2,x._2))
+
+    // Build the recommendation model using ALS
+    val rank = 20
+    val numIterations = 20
+    val model = ALS.train(ratings, rank, numIterations, 0.01)
+
+    model.userFeatures.saveAsTextFile("hdfs:///user/szhang/pubparser/resources/articleFeatures")
+    model.productFeatures.saveAsTextFile("hdfs:///user/szhang/pubparser/resources/wordFeatures")
+
     coordinatorMatrix.saveAsTextFile("hdfs:///user/szhang/pubparser/resources/coordinatorMatrix")
     labels.saveAsTextFile("hdfs:///user/szhang/pubparser/resources/labels")
+
 
     val bw = new BufferedWriter(new FileWriter("wordset.txt"))
     wordSet.foreach(x=>{
@@ -69,7 +87,6 @@ object processing {
       bw.newLine()
     })
     bw.close()
-
   }
 
 
