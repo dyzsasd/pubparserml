@@ -37,6 +37,7 @@ public class CleanDriver extends Configured implements Tool{
         FileOutputFormat.setOutputPath(job, new Path(args[1]));
 
         job.setMapperClass(CleanMapper.class);
+        job.setReducerClass(CleanReducer.class);
 
         job.setNumReduceTasks(0);
 
